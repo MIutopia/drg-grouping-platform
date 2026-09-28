@@ -1,0 +1,13 @@
+# DRG workbench backend dependencies (Python 3.13)
+# Install: pip install -r src/web/backend/requirements.txt
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pymssql>=2.2
+pandas>=2.0
+# Required by manager_api.py (UploadFile -> FastAPI form parsing); without it uvicorn
+# fails at import time with `RuntimeError: Form data requires "python-multipart"`,
+# so a clean deployment cannot even start (test report D1).
+python-multipart>=0.0.9
+# Required by export_api.py (pd.ExcelWriter engine="openpyxl"); undeclared -> /api/export/*
+# returns 500 for all four roles (test report D2).
+openpyxl>=3.1

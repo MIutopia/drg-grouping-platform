@@ -1,0 +1,17 @@
+{
+  "_说明": "复制为 local.json 后填写。该文件已在 .gitignore 中排除，严禁提交。也可改用环境变量 DRG_SBO_PASSWORD / DRG_DICT_PASSWORD。",
+  "sbo": {
+    "host": "192.0.2.10",
+    "port": 1433,
+    "user": "svc_ro",
+    "password": "<在此填写>",
+    "database": "SBO"
+  },
+  "dict": {
+    "host": "192.0.2.11",
+    "port": 1433,
+    "user": "svc_ro",
+    "password": "<在此填写>",
+    "database": "SBO"
+  }
+}

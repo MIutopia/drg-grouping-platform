@@ -1,0 +1,28 @@
+# ETL / 作业层依赖（Python 3.10+，部署到应用服务器）
+#
+# 与 src/web/backend/requirements.txt 分开声明：后端只服务 API，作业层要解析 Excel、
+# 用 pymssql 直连 HIS/drg 库、读写 docx/pdf 源文件。安装：
+#     pip install -r src/etl/requirements.txt
+#
+# 本清单由实际 import 扫描得出（2026-09-27），非猜测：
+#   pandas      —— 全作业数据框（s01/s02/s07/s08…）
+#   pymssql     —— dbio/ddlio 主驱动（SQL Server）
+#   pyodbc      —— dbio 的备用驱动（无 FreeTDS 环境时自动切换）
+#   openpyxl    —— 读官方下发 .xlsx（s03/s04…）、导出 xlsx
+#   numpy       —— pandas 依赖 + 数值计算
+#   cryptography—— config/secure.py 的 Fernet 凭据密文化
+#   python-docx —— 读 .docx 源文件（s13b/s30 等探针作业；可选）
+#   pypdf       —— 读 .pdf 源文件（可选）
+#   tabulate    —— 报告表格渲染（可选，缺失时脚本自动降级）
+#
+# 注：标"可选"的包只有探针类作业用；生产日常链路（s01/s02/s06/s07/s08/s11/s14/s18/
+# s19/s20）只依赖前 5 项。
+pandas>=2.0
+pymssql>=2.2
+pyodbc>=5.0
+openpyxl>=3.1
+numpy>=1.26
+cryptography>=42.0
+python-docx>=1.1
+pypdf>=4.0
+tabulate>=0.9

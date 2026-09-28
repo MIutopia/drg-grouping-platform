@@ -1,0 +1,29 @@
+# 凭据与本地配置（严禁入库）
+src/config/local.json
+src/config/secrets.json
+src/config/.configkey
+**/metabase.json
+src/config/*.bak
+
+# 原始资料与产出物
+原始资料/
+src/out/
+
+# 运行日志
+src/run/*.log
+src/run/*.tmp
+
+# 前端构建产物
+src/web/frontend/dist/
+src/web/frontend/node_modules/
+
+# Python / 编辑器
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini

@@ -1,0 +1,5 @@
+{
+  "_说明": "复制为 metabase.json 后填写（.gitignore 已排除，严禁提交）。Metabase API key 为密钥，请勿经聊天/文档传递。",
+  "base_url": "http://<Metabase地址>:<端口>",
+  "api_key": "<在此填写 API key>"
+}

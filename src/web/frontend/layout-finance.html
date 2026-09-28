@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>收费处工作台 · 布局画布</title>
+<style>
+  :root{
+    --bg:#faf8f5; --primary:#4a9d9a; --gold:#e8b86d; --terra:#c17767; --slate:#6b8e8e;
+    --ink:#1f2937; --ink2:#4b5563; --muted:#9ca3af; --line:#f3f4f6; --line2:#e5e7eb;
+    --art:1440px; --side:240px; --pad:32px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#e9e6e1;font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;color:var(--ink);
+       -webkit-font-smoothing:antialiased}
+  .wrap{padding:26px 0 80px}
+
+  /* ---------- 画布头部 ---------- */
+  .head{width:var(--art);margin:0 auto 18px}
+  .head h1{margin:0;font-size:19px;font-weight:600}
+  .head p{margin:6px 0 0;font-size:12.5px;color:#6b7280;line-height:1.7}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #e3ded6;border-radius:9px;
+        padding:5px 9px;font-size:11.5px;color:#4b5563}
+  .chip b{font:600 11px/1 ui-monospace,Consolas,monospace;background:#1f2937;color:#fff;padding:3px 6px;border-radius:5px}
+  .dims{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;font-size:11.5px;color:#8b8579}
+  .dims span{background:#f3f1ed;border-radius:7px;padding:4px 9px}
+  .dims span b{color:#4b5563}
+
+  /* ---------- 画板 ---------- */
+  .art{width:var(--art);margin:0 auto;position:relative;background:var(--bg);border-radius:20px;
+       box-shadow:0 24px 60px rgba(0,0,0,.14);overflow:hidden;display:flex;min-height:1000px}
+
+  /* 侧边栏 */
+  .side{width:var(--side);flex:0 0 var(--side);background:var(--bg);border-right:1px solid rgba(229,231,235,.7);
+        padding:24px;position:relative}
+  .logo{display:flex;align-items:center;gap:12px;margin-bottom:40px}
+  .logo i{width:36px;height:36px;border-radius:12px;background:var(--primary);display:flex;align-items:center;
+          justify-content:center;color:#fff;font-style:normal;font-size:17px}
+  .logo span{font-size:17px;font-weight:600;white-space:nowrap}
+  .nav{display:flex;flex-direction:column;gap:4px}
+  .nav a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;font-size:13.5px;
+         font-weight:500;text-decoration:none;color:#6b7280;background:transparent}
+  .nav a.on{background:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(74,157,154,.28)}
+  .side .foot{position:absolute;left:24px;right:24px;bottom:24px;padding-top:24px;border-top:1px solid var(--line);
+              display:flex;align-items:center;gap:12px}
+  .side .foot i{width:32px;height:32px;border-radius:12px;background:var(--gold);color:#fff;font-style:normal;
+                display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600}
+  .side .foot div{min-width:0}
+  .side .foot .n{font-size:13px;font-weight:500;color:#374151}
+  .side .foot .r{font-size:11.5px;color:var(--muted)}
+
+  /* 主区 */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  .top{height:76px;padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+       border-bottom:1px solid rgba(229,231,235,.6);background:rgba(250,248,245,.85)}
+  .top .l{display:flex;align-items:center;gap:16px}
+  .fold{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+        color:#6b7280;font-size:15px}
+  .top h2{margin:0;font-size:19px;font-weight:600}
+  .top .sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .avatar{width:36px;height:36px;border-radius:12px;background:var(--gold);color:#fff;font-size:13px;font-weight:600;
+          display:flex;align-items:center;justify-content:center}
+  .body{padding:var(--pad);display:flex;flex-direction:column;gap:24px}
+
+  /* 区域标注 */
+  .blk{position:relative;outline:1px dashed #d7cfc2;outline-offset:9px;border-radius:16px}
+  .tag{position:absolute;top:-13px;left:-17px;z-index:9;background:#1f2937;color:#fff;
+       font:600 10.5px/1 ui-monospace,Consolas,monospace;padding:5px 8px;border-radius:6px;letter-spacing:.4px}
+  .tag.soft{background:#8b8579}
+
+  /* 卡片通用 */
+  .card{background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.045);padding:24px}
+
+  /* A 统计卡 */
+  .gridA{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .stat{background:#fff;border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.045);padding:20px;height:126px;
+        display:flex;flex-direction:column;justify-content:space-between;position:relative}
+  .stat .row1{display:flex;align-items:flex-start;justify-content:space-between}
+  .stat .lb{font-size:12.5px;color:var(--muted)}
+  .stat .ic{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+            color:#fff;font-size:15px}
+  .stat .val{font-size:23px;font-weight:600;letter-spacing:-.4px;line-height:1.1;
+             overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .stat .hint{font-size:11.5px;color:var(--muted)}
+
+  /* B 图表行 */
+  .gridB{display:grid;grid-template-columns:2fr 1fr;gap:24px}
+  .card h3{margin:0;font-size:16.5px;font-weight:600}
+  .card .cap{margin:3px 0 0;font-size:11.5px;color:var(--muted)}
+  .card .cap.sp{margin-bottom:22px}
+
+  /* CSS 柱状图（真实页面为 ECharts） */
+  .bars{display:flex;align-items:flex-end;gap:26px;height:230px;padding:12px 4px 0;border-bottom:1px solid #e7e2da}
+  .bars .b{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%}
+  .bars .b .v{font-size:11px;color:var(--ink2);font-weight:500}
+  .bars .b .rect{width:100%;max-width:54px;border-radius:7px 7px 0 0;background:linear-gradient(180deg,#4a9d9a,#4a9d9a8c)}
+  .bars .b .rect.neg{background:linear-gradient(180deg,#c17767,#c177678c)}
+  .bars .b .x{font-size:11px;color:var(--muted);margin-top:2px}
+  .bars-wrap{height:262px}
+
+  /* 横向条 */
+  .hbar{display:flex;flex-direction:column;gap:13px}
+  /* 与真实页面（ECharts hbar）对齐：实测标签列 104 / 条形自适应 / 数值列 ~68，
+     此时绘图区约占卡片 45%（修复前是负数，柱子被挤没） */
+  .hbar .it{display:grid;grid-template-columns:104px 1fr 70px;align-items:center;column-gap:0}
+  .hbar .nm{font-size:11.5px;color:#4b5563;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hbar .tr{height:7px;background:#f3f1ed;border-radius:999px;overflow:hidden}
+  .hbar .tr i{display:block;height:100%;border-radius:999px;background:var(--primary)}
+  .hbar .tr i.neg{background:var(--terra)}
+  .hbar .vl{font-size:11.5px;text-align:right;font-weight:500}
+  .hbar .vl.pos{color:var(--primary)} .hbar .vl.neg{color:var(--terra)}
+
+  /* C 分段控件 */
+  .seg{display:inline-flex;gap:4px;background:rgba(243,241,237,.8);border-radius:12px;padding:4px}
+  .seg button{border:0;background:transparent;font-size:13px;color:#6b7280;padding:8px 16px;border-radius:9px;
+              font-family:inherit;cursor:default}
+  .seg button.on{background:#fff;color:var(--ink);font-weight:500;box-shadow:0 2px 6px rgba(0,0,0,.06)}
+
+  /* 表格 */
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;padding:12px 16px;font-size:11px;font-weight:500;color:var(--muted);
+     text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:14px 16px;font-size:12.5px;color:#4b5563;border-bottom:1px solid var(--line);white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  td.k{font-weight:500;color:var(--ink)}
+  td.num{text-align:right}
+  td.pos{color:var(--primary);font-weight:500}
+  td.neg{color:var(--terra);font-weight:500}
+  th.num{text-align:right}
+  .more{font-size:11px;color:var(--muted);margin-top:12px}
+
+  /* 表格块的头 */
+  .blkhead{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+  .blkhead h3{margin:0;font-size:16.5px;font-weight:600}
+  .blkhead .n{font-size:11.5px;color:var(--muted)}
+
+  /* 首屏下沿 */
+  .foldline{position:absolute;left:0;right:0;top:900px;border-top:1px dashed #b9b0a1;z-index:8}
+  .foldline span{position:absolute;right:14px;top:-11px;background:#8b8579;color:#fff;
+                 font:600 10.5px/1 ui-monospace,Consolas,monospace;padding:5px 8px;border-radius:6px}
+  .note{width:var(--art);margin:14px auto 0;font-size:11.5px;color:#8b8579;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ 说明头 ============ -->
+  <div class="head">
+    <h1>收费处工作台 · 布局画布</h1>
+    <p>
+      整页铺开（真实栅格比例 + 真实数据）。四个表格页签在真实页面里是互斥的，这里全部展开，便于逐块看看排布。<br />
+      请直接指着区域代号告诉我问题，例如「<b>B2 太挤</b>」「<b>D3 列太多</b>」「<b>A 行卡片高度不一致</b>」。
+    </p>
+    <div class="legend">
+      <span class="chip"><b>S</b>侧边栏</span>
+      <span class="chip"><b>T</b>顶栏</span>
+      <span class="chip"><b>A</b>统计卡行（A1–A4）</span>
+      <span class="chip"><b>B1</b>月度盈亏趋势</span>
+      <span class="chip"><b>B2</b>病组盈亏 Top10</span>
+      <span class="chip"><b>C</b>页签分段控件</span>
+      <span class="chip"><b>D1</b>病组盈亏表</span>
+      <span class="chip"><b>D2</b>科室盈亏表</span>
+      <span class="chip"><b>D3</b>收费对账表</span>
+      <span class="chip"><b>D4</b>结算台账表</span>
+    </div>
+    <div class="dims">
+      <span>画板 <b>1440 × 自适应</b></span>
+      <span>侧边栏 <b>240</b></span>
+      <span>内容区留白 <b>32</b></span>
+      <span>栅格 <b>A: 4列/间距20</b> · <b>B: 3列/间距24</b></span>
+      <span>表格折叠 <b>max-height 30rem</b></span>
+    </div>
+  </div>
+
+  <!-- ============ 画板 ============ -->
+  <div class="art">
+    <div class="foldline"><span>1440 × 900 首屏下沿</span></div>
+
+    <!-- S 侧边栏 -->
+    <aside class="side">
+      <div class="tag">S 侧边栏</div>
+      <div class="logo"><i>▦</i><span>DRG 工作台</span></div>
+      <nav class="nav">
+        <a href="javascript:void(0)" class="on">◧ 财务 / 收费处</a>
+      </nav>
+      <div class="foot">
+        <i>李</i>
+        <div><div class="n">李会计</div><div class="r">财务 / 收费处</div></div>
+      </div>
+    </aside>
+
+    <div class="main">
+      <!-- T 顶栏 -->
+      <div class="top">
+        <div class="tag">T 顶栏</div>
+        <div class="l">
+          <div class="fold">▤</div>
+          <div>
+            <h2>财务 / 收费处</h2>
+            <div class="sub">结算台账 · 收费对账 · 盈亏看板</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="avatar">李</div>
+        </div>
+      </div>
+
+      <div class="body">
+
+        <!-- A 统计卡 -->
+        <div class="blk">
+          <div class="tag">A 统计卡行</div>
+          <div class="gridA">
+            <div class="stat">
+              <div class="row1"><span class="lb">本期例数</span><span class="ic" style="background:#4a9d9a">◉</span></div>
+              <div><div class="val" id="a1">—</div><div class="hint" id="a1h">—</div></div>
+            </div>
+            <div class="stat">
+              <div class="row1"><span class="lb">总费用</span><span class="ic" style="background:#6b8e8e">¥</span></div>
+              <div><div class="val" id="a2">—</div><div class="hint">含全部结算例</div></div>
+            </div>
+            <div class="stat">
+              <div class="row1"><span class="lb">盈亏</span><span class="ic" style="background:#4a9d9a">↗</span></div>
+              <div><div class="val" id="a3">—</div><div class="hint" id="a3h">对支付标准</div></div>
+            </div>
+            <div class="stat">
+              <div class="row1"><span class="lb">中医组占比</span><span class="ic" style="background:#e8b86d">✚</span></div>
+              <div><div class="val" id="a4">—</div><div class="hint">中医优势病组</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B 图表行 -->
+        <div class="gridB">
+          <div class="blk">
+            <div class="tag">B1</div>
+            <div class="card">
+              <h3>月度盈亏趋势</h3>
+              <p class="cap sp">全院结算数据（正=结余 · 负=亏损）· 真实页面为 ECharts 柱状图</p>
+              <div class="bars-wrap"><div class="bars" id="bars"></div></div>
+            </div>
+          </div>
+          <div class="blk">
+            <div class="tag">B2</div>
+            <div class="card">
+              <h3>病组盈亏 Top 10</h3>
+              <p class="cap">按盈亏排序（元）· 真实页面为 ECharts 横向条形图</p>
+              <div class="hbar" id="hbar" style="margin-top:12px"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- C 分段控件 -->
+        <div class="blk" style="display:flex">
+          <div class="tag">C</div>
+          <div class="seg">
+            <button class="on">病组盈亏</button><button>科室盈亏</button><button>收费对账</button><button>结算台账</button>
+          </div>
+        </div>
+
+        <!-- D1 病组盈亏 -->
+        <div class="blk">
+          <div class="tag">D1</div>
+          <div class="card">
+            <div class="blkhead"><h3>病组盈亏</h3><span class="n" id="d1n"></span></div>
+            <table><thead><tr>
+              <th>病组</th><th class="num">例数</th><th class="num">总费用</th><th class="num">支付标准</th>
+              <th class="num">盈亏</th><th class="num">中医占比</th>
+            </tr></thead><tbody id="d1"></tbody></table>
+          </div>
+        </div>
+
+        <!-- D2 科室盈亏 -->
+        <div class="blk">
+          <div class="tag">D2</div>
+          <div class="card">
+            <div class="blkhead"><h3>科室盈亏</h3><span class="n" id="d2n"></span></div>
+            <table><thead><tr>
+              <th>科室</th><th class="num">例数</th><th class="num">总费用</th><th class="num">支付标准</th>
+              <th class="num">盈亏</th><th class="num">中医占比</th>
+            </tr></thead><tbody id="d2"></tbody></table>
+          </div>
+        </div>
+
+        <!-- D3 收费对账 -->
+        <div class="blk">
+          <div class="tag">D3</div>
+          <div class="card">
+            <div class="blkhead"><h3>收费对账</h3><span class="n" id="d3n"></span></div>
+            <table><thead><tr>
+              <th>住院号</th><th>组码</th><th class="num">总费用</th><th class="num">HIS 费用</th>
+              <th class="num">差异</th><th>类型</th><th class="num">盈亏</th>
+            </tr></thead><tbody id="d3"></tbody></table>
+          </div>
+        </div>
+
+        <!-- D4 结算台账 -->
+        <div class="blk">
+          <div class="tag">D4</div>
+          <div class="card">
+            <div class="blkhead"><h3>结算台账</h3><span class="n" id="d4n"></span></div>
+            <table><thead><tr>
+              <th>住院号</th><th>科室</th><th>组码</th><th>病组</th><th class="num">权重</th>
+              <th class="num">支付标准</th><th class="num">总费用</th><th class="num">盈亏</th><th class="num">天数</th>
+            </tr></thead><tbody id="d4"></tbody></table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    注：本页是<strong>布局评审用</strong>的静态画布（不参与打包），数据取自后端真实接口；图表用 CSS 示意占位，真实页面为 ECharts。
+  </div>
+</div>
+
+<script>
+const ROWS = 25;                 // 每张表最多铺多少行，避免画布过长
+const M = (v) => (v === '' || v == null) ? '—'
+  : Number(v).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const PCT = (v) => (v === '' || v == null) ? '—' : (Number(v) * 100).toFixed(1) + '%';
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+let token = '';
+async function api(path, opt = {}) {
+  const res = await fetch('/api' + path, {
+    ...opt,
+    headers: Object.assign({ 'Content-Type': 'application/json' },
+      token ? { Authorization: 'Bearer ' + token } : {}, opt.headers || {}),
+  });
+  if (!res.ok) throw new Error(path + ' -> ' + res.status);
+  return res.json();
+}
+
+function renderStats(o) {
+  const L = o.latest || {};
+  document.getElementById('a1').textContent = L.cases ?? '—';
+  document.getElementById('a1h').textContent = L.period || '—';
+  document.getElementById('a2').textContent = M(L.total_cost);
+  document.getElementById('a3').textContent = M(L.profit_loss);
+  document.getElementById('a3h').textContent = Number(L.profit_loss) >= 0 ? '结余' : '亏损';
+  document.getElementById('a4').textContent = PCT(L.tcm_share);
+
+  const ps = o.periods || [];
+  const max = Math.max(1, ...ps.map((p) => Math.abs(Number(p.profit_loss) || 0)));
+  document.getElementById('bars').innerHTML = ps.map((p) => {
+    const has = !(p.profit_loss === null || p.profit_loss === undefined || p.profit_loss === '');
+    const v = has ? Number(p.profit_loss) : 0;
+    const h = has ? Math.max(3, (Math.abs(v) / max) * 78) : 0;
+    return `<div class="b"><span class="v"${has ? '' : ' style="color:#c9c2b6"'}>${has ? (v / 10000).toFixed(1) + '万' : '—'}</span>
+      <div class="rect ${v < 0 ? 'neg' : ''}" style="height:${h}%${has ? '' : ';background:transparent'}"></div>
+      <span class="x">${esc(p.period)}</span></div>`;
+  }).join('') || '<div style="color:#9ca3af;font-size:12px">无数据</div>';
+}
+
+function renderTop10(rows) {
+  const top = [...rows].sort((a, b) => Number(b.profit_loss) - Number(a.profit_loss)).slice(0, 10);
+  const max = Math.max(1, ...top.map((d) => Math.abs(Number(d.profit_loss) || 0)));
+  document.getElementById('hbar').innerHTML = top.map((d) => {
+    const v = Number(d.profit_loss) || 0;
+    return `<div class="it"><span class="nm">${esc(d.key_name)}</span>
+      <span class="tr"><i class="${v < 0 ? 'neg' : ''}" style="width:${(Math.abs(v) / max * 100).toFixed(1)}%"></i></span>
+      <span class="vl ${v < 0 ? 'neg' : 'pos'}">${M(v)}</span></div>`;
+  }).join('') || '<div style="color:#9ca3af;font-size:12px">无数据</div>';
+}
+
+function renderPnlTable(id, nid, rows) {
+  document.getElementById(nid).textContent = '共 ' + rows.length + ' 行，此处铺前 ' + Math.min(rows.length, ROWS) + ' 行';
+  document.getElementById(id).innerHTML = rows.slice(0, ROWS).map((r) => {
+    const v = Number(r.profit_loss) || 0;
+    return `<tr><td class="k">${esc(r.key_name)}</td><td class="num">${r.cases}</td>
+      <td class="num">${M(r.total_cost)}</td><td class="num">${M(r.std_cost)}</td>
+      <td class="num ${v >= 0 ? 'pos' : 'neg'}">${M(v)}</td>
+      <td class="num">${PCT(r.tcm_share)}</td></tr>`;
+  }).join('');
+}
+
+function renderRecon(rc) {
+  const c = rc.cases || [];
+  document.getElementById('d3n').textContent = '共 ' + c.length + ' 行，此处铺前 ' + Math.min(c.length, ROWS) + ' 行';
+  document.getElementById('d3').innerHTML = c.slice(0, ROWS).map((r) => {
+    const v = Number(r.profit_loss) || 0, d = Number(r.diff) || 0;
+    return `<tr><td class="k">${esc(r.medical_no)}</td><td>${esc(r.drg_code)}</td>
+      <td class="num">${M(r.total_cost)}</td><td class="num">${M(r.his_fee)}</td>
+      <td class="num ${Math.abs(d) > 1 ? 'neg' : ''}">${M(d)}</td>
+      <td>${esc(r.diff_type)}</td><td class="num ${v >= 0 ? 'pos' : 'neg'}">${M(v)}</td></tr>`;
+  }).join('');
+}
+
+function renderSettle(rows) {
+  document.getElementById('d4n').textContent = '共 ' + rows.length + ' 行（接口上限 300），此处铺前 ' + Math.min(rows.length, ROWS) + ' 行';
+  document.getElementById('d4').innerHTML = rows.slice(0, ROWS).map((r) => {
+    const v = Number(r.profit_loss) || 0;
+    return `<tr><td class="k">${esc(r.medical_no)}</td><td>${esc(r.office_name)}</td>
+      <td>${esc(r.drg_code)}</td><td>${esc(r.drg_name)}</td><td class="num">${esc(r.weight)}</td>
+      <td class="num">${M(r.drg_standard)}</td><td class="num">${M(r.total_cost)}</td>
+      <td class="num ${v >= 0 ? 'pos' : 'neg'}">${M(v)}</td><td class="num">${esc(r.actual_days)}</td></tr>`;
+  }).join('');
+}
+
+// 侧边栏/头像用真实登录人，避免画布上出现假人名影响评审
+function paintUser(me) {
+  const ini = (me.name || '?').slice(0, 1);
+  const q = (s) => document.querySelector(s);
+  const n = q('.side .foot .n'), r = q('.side .foot .r'), i = q('.side .foot i'), av = q('.avatar');
+  if (n) n.textContent = me.name || '—';
+  if (r) r.textContent = (me.role_name || '') + (me.office ? ' · ' + me.office : '');
+  if (i) i.textContent = ini;
+  if (av) av.textContent = ini;
+}
+
+(async function main() {
+  try {
+    // 布局预览页：不写死账号。原文件内嵌真实手机号 + 口令，已移除。
+    // 预览时在控制台执行 localStorage.setItem('preview_phone'/'preview_password', …) 即可。
+    const lg = await api('/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        phone: localStorage.getItem('preview_phone') || '',
+        password: localStorage.getItem('preview_password') || '',
+      }),
+    });
+    token = lg.token;
+    paintUser(await api('/me'));
+    const ov = await api('/finance/overview');
+    renderStats(ov);
+    renderTop10(await api('/finance/pnl?level=drg'));
+    renderPnlTable('d1', 'd1n', await api('/finance/pnl?level=drg'));
+    renderPnlTable('d2', 'd2n', await api('/finance/pnl?level=office'));
+    renderRecon(await api('/finance/recon'));
+    renderSettle(await api('/finance/settlement?limit=300'));
+  } catch (e) {
+    document.querySelectorAll('td, .val').forEach((n) => { if (!n.textContent || n.textContent === '—') n.textContent = '—'; });
+    document.getElementById('a1h').textContent = '数据加载失败：' + e.message;
+  }
+})();
+</script>
+</body>
+</html>

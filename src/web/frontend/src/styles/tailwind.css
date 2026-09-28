@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   Key: Tailwind preflight is disabled (it would clash with Element Plus
+   button/table resets), but preflight also provides box-sizing: border-box.
+   Without it the whole site falls back to the browser's content-box and every
+   "fixed size + padding" element grows larger than intended:
+     - sidebar inner w-60 p-6 h-full -> height 100vh + 48px, clipped by
+       overflow-hidden so the bottom user card gets cut (sidebar looks "too tall");
+     - nav items w-full px-4 -> width 100% + 32px, overflowing horizontally so the
+       right arrow is pushed out of view (sidebar looks "too wide").
+   Only this one declaration is restored here; tag styles for button/table etc.
+   are left untouched, so Element Plus is still not affected.
+   ------------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Other preflight resets we actually rely on (tag defaults only; anything Element
+   Plus sets via class selectors has higher specificity and is not overridden).
+   - button: without this, native buttons keep a gray border/background and segmented
+     controls / icon buttons look dirty;
+   - h1-h6/p: without this, every heading keeps the 0.8em default margin and card
+     spacing drifts from the design. */
+button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------
+   Warm design system (per the external template: #faf8f5 base + #4a9d9a primary).
+   Element Plus theme variables are aligned to the same palette so el-table /
+   el-dialog / el-tag components visually match the hand-written styles.
+   ------------------------------------------------------------------ */
+:root {
+  --warm-bg: #faf8f5;
+  --warm-primary: #4a9d9a;
+  --warm-gold: #e8b86d;
+  --warm-terra: #c17767;
+  --warm-slate: #6b8e8e;
+
+  /* Element Plus primary -> warm teal */
+  --el-color-primary: #4a9d9a;
+  --el-color-primary-light-3: #80bab8;
+  --el-color-primary-light-5: #a5cecd;
+  --el-color-primary-light-7: #c9e2e1;
+  --el-color-primary-light-8: #dbebeb;
+  --el-color-primary-light-9: #edf5f5;
+  --el-color-primary-dark-2: #3b7e7b;
+
+  /* Semantic colors */
+  --el-color-success: #4a9d9a;
+  --el-color-success-light-3: #80bab8;
+  --el-color-success-light-5: #a5cecd;
+  --el-color-success-light-7: #c9e2e1;
+  --el-color-success-light-8: #dbebeb;
+  --el-color-success-light-9: #edf5f5;
+
+  --el-color-warning: #e8b86d;
+  --el-color-warning-light-3: #efd29b;
+  --el-color-warning-light-5: #f4dfb6;
+  --el-color-warning-light-7: #f9ecd1;
+  --el-color-warning-light-8: #fbf2de;
+  --el-color-warning-light-9: #fdf8eb;
+
+  --el-color-danger: #c17767;
+  --el-color-danger-light-3: #d6a29b;
+  --el-color-danger-light-5: #e0bcb6;
+  --el-color-danger-light-7: #ebd7d3;
+  --el-color-danger-light-8: #f1e2df;
+  --el-color-danger-light-9: #f8eeec;
+
+  /* Shape and background */
+  --el-border-radius-base: 12px;
+  --el-border-radius-small: 10px;
+  --el-border-color-lighter: #f0ece6;
+  --el-bg-color-page: #faf8f5;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--warm-bg);
+  color: #374151;
+}
